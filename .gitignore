@@ -4,3 +4,4 @@ servicekey.json
 *.pyc
 __pycache__/
 *.pyo
+logging.txt

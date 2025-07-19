@@ -37,3 +37,18 @@ while user_input.lower() != "exit":
     result = agent.invoke({"messages": conversation_history})
     conversation_history = result["messages"]
     user_input = input("ENTER: ")
+
+with open("logging.txt", "w", encoding="utf-8") as file:
+    file.write("Your Conversation Log:\n")
+    # Take the last 5 messages from the history
+    # If history has fewer than 5, it will take all of them.
+    messages_to_log = conversation_history[-5:]
+
+    for message in messages_to_log:
+        if isinstance(message, HumanMessage):
+            file.write(f"You: {message.content}\n")
+        elif isinstance(message, AIMessage):
+            file.write(f"AI: {message.content}\n\n")
+    file.write("End of Conversation")
+
+print("Conversation saved to logging.txt")
