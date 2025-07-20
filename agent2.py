@@ -40,9 +40,7 @@ while user_input.lower() != "exit":
 
 with open("logging.txt", "w", encoding="utf-8") as file:
     file.write("Your Conversation Log:\n")
-    # Take the last 5 messages from the history
-    # If history has fewer than 5, it will take all of them.
-    messages_to_log = conversation_history[-5:]
+    messages_to_log = conversation_history[-10:]
 
     for message in messages_to_log:
         if isinstance(message, HumanMessage):
