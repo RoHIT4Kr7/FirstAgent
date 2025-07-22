@@ -45,7 +45,7 @@ def save(filename: str) -> str:
         filename = f"{filename}.txt"
 
     try:
-        with open(filename, "w") as file:
+        with open(filename, "w", encoding="utf-8") as file:
             file.write(document_content)
         print(f"\n💾 Document has been saved to: {filename}")
         return f"Document has been saved successfully to '{filename}'."
@@ -54,10 +54,15 @@ def save(filename: str) -> str:
         return f"Error saving document: {str(e)}"
 
 
+@tool
+def send_mail(state: AgentState) -> AgentState:
+    """use this tool to send mail"""
+
+
 tools = [update, save]
 
 model = ChatVertexAI(
-    model_name="gemini-2.5-flash", project="n8n-local-463912"
+    model_name="gemini-2.5-pro", project="n8n-local-463912"
 ).bind_tools(tools)
 
 

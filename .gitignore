@@ -5,3 +5,4 @@ servicekey.json
 __pycache__/
 *.pyo
 logging.txt
+personalagent.py
