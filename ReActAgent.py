@@ -4,7 +4,6 @@ from langchain_google_vertexai import ChatVertexAI
 from langchain_core.tools import tool
 from langchain_core.prompts import ChatPromptTemplate
 from langgraph.prebuilt import ToolNode
-from langchain_tavily import TavilySearch
 from langchain_core.messages import HumanMessage, ToolMessage, SystemMessage, AIMessage
 from typing import TypedDict, Annotated, Sequence
 import operator
@@ -14,7 +13,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from langchain_perplexity import ChatPerplexity
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,18 +21,23 @@ load_dotenv()
 # --- Tool Definitions ---
 
 
-@tool
 def search_web(query: str):
     """
     A powerful tool that allows you to perform real-time internet searches for up-to-date information.
     Use this for current events, news, or any topic requiring the latest data.
     """
-    tavily_api_key = os.getenv("TAVILY_API_KEY")
-    if not tavily_api_key:
-        return "Tavily API key is not configured."
-    # Using the recommended TavilySearch tool
-    tavily_tool = TavilySearch(max_results=10, api_key=tavily_api_key)
-    return tavily_tool.invoke(query)
+    pplx_api_key = os.getenv("PPLX_API_KEY")
+    if not pplx_api_key:
+        return "Perplexity API key (PPLX_API_KEY) is not configured."
+
+    # Use Perplexity's online model to get answers from the web
+    chat = ChatPerplexity(model="sonar", temperature=0.7, pplx_api_key=pplx_api_key)
+
+    # Perplexity expects a list of messages, so we wrap the query
+    messages = [HumanMessage(content=query)]
+    result = chat.invoke(messages)
+
+    return result.content
 
 
 @tool
